@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{% static 'css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
     <link rel="stylesheet" href="{% static 'css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'css/post.css' %}">
     <title>Instagram</title>
@@ -35,6 +36,16 @@
           <a href="#">
             <img src="{% static 'images/icon_profile.png' %}" alt="">
           </a>
+        </div>
+      </nav>
+      <nav>
+        <div>
+          {% if user.is_authenticated %}
+          <span>{{ user }}로 로그인 중</span>
+          <a href="{% url 'member:logout'%}" class="btn">로그아웃</a>
+          {% else %}
+          <a href="{% url 'member:login'%}" class="btn">로그인</a>
+          {% endif %}
         </div>
       </nav>
     </header>
