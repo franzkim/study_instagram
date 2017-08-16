@@ -26,3 +26,10 @@ def login(request):
 def logout(request):
     django_logout(request)
     return redirect('post:post_list')
+
+
+def signup(request):
+    if request.method == 'POST':
+        pass
+    else:
+        return render(request, 'member/signup.html')
