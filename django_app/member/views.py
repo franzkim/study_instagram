@@ -2,7 +2,7 @@ from django.contrib.auth import login as django_login, logout as django_logout, 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
-from .forms import LoginForm
+from .forms import LoginForm, SignupForm
 
 User = get_user_model()
 
@@ -53,27 +53,55 @@ def logout(request):
 
 def signup(request):
     if request.method == 'POST':
-        # username, password1, password2에 POST로 전달받은 데이터를 할당
-        username = request.POST['username']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
-        # username에 해당하는 User가 있는지 검사
-        if User.objects.filter(username=username).exists():
-            # 이미 존재하는 username일 경우
-            return HttpResponse('Username is already exist')
-        # password1과 password2가 같은지 검사
-        elif password1 != password2:
-            # 다를 경우
-            return HttpResponse('Password and Password Check are not equal')
 
-        # 위의 두 경우가 아닌 경우 유저를 생성
-        user = User.objects.create_user(
-            username=username,
-            password=password1,
-        )
-        # 생성한 유저를 로그인 시킴
-        django_login(request, user)
-        # 이후 post_list 뷰로 이동
-        return redirect('post:post_list')
+        ### Form을 사용하지 않는 경우
+        # # username, password1, password2에 POST로 전달받은 데이터를 할당
+        # username = request.POST['username']
+        # password1 = request.POST['password1']
+        # password2 = request.POST['password2']
+        # # username에 해당하는 User가 있는지 검사
+        # if User.objects.filter(username=username).exists():
+        #     # 이미 존재하는 username일 경우
+        #     return HttpResponse('Username is already exist')
+        # # password1과 password2가 같은지 검사
+        # elif password1 != password2:
+        #     # 다를 경우
+        #     return HttpResponse('Password and Password Check are not equal')
+        #
+        # # 위의 두 경우가 아닌 경우 유저를 생성
+        # user = User.objects.create_user(
+        #     username=username,
+        #     password=password1,
+        # )
+
+        ### Form을 사용하는 경우
+        form = SignupForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+
+            # if User.objects.filter(username=username).exists():
+            #     # 이미 존재하는 username일 경우
+            #     return HttpResponse('Username is already exist')
+            # # password1과 password2가 같은지 검사
+            # elif password1 != password2:
+            #     # 다를 경우
+            #     return HttpResponse('Password and Password Check are not equal')
+            #
+            # # 위의 두 경우가 아닌 경우 유저를 생성
+            # user = User.objects.create_user(
+            #     username=username,
+            #     password=password1,
+            # )
+
+            # 생성한 유저를 로그인 시킴
+            # django_login(request, user)
+            # 이후 post_list 뷰로 이동
+            return redirect('post:post_list')
     else:
-        return render(request, 'member/signup.html')
+        form = SignupForm()
+    context = {
+        'form': form,
+    }
+    return render(request, 'member/signup.html', context)
