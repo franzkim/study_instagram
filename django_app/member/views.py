@@ -33,17 +33,22 @@ def login(request):
         if form.is_valid():
             user = form.cleaned_data['user']
             django_login(request, user)
+            # 일반적인 경우에는 post_list로 이동하지만
+            # GET parameter의 next속성값이 있을 경우 해당 URL로 이동
+            next = request.GET.get('next')
+            if next:
+                return redirect(next)
             return redirect('post:post_list')
     else:
         if request.user.is_authenticated:
             return redirect('post:post_list')
         # LoginForm인스턴스를 생성해서 context에 넘김
         form = LoginForm()
-        context = {
-            'form': form,
-        }
-        # render시 context에는 LoginForm클래스형 form객체가 포함됨
-        return render(request, 'member/login.html', context)
+    context = {
+        'form': form,
+    }
+    # render시 context에는 LoginForm클래스형 form객체가 포함됨
+    return render(request, 'member/login.html', context)
 
 
 def logout(request):
