@@ -29,6 +29,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Custom User
 AUTH_USER_MODEL = 'member.User'
+LOGIN_URL = 'member:login'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/

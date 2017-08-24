@@ -11,6 +11,7 @@ class SignupForm(forms.Form):
     nickname = forms.CharField(
         widget=forms.TextInput,
         help_text='닉네임은 유일해야합니다',
+        max_length=24,
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput,
